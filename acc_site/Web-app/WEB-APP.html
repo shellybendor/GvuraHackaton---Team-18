@@ -1,0 +1,316 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"  "http://www.w3.org/TR/REC-html40/strict.dtd">
+       
+<meta http-equiv="content-type" content="text/html;charset=iso-8859-8-i">
+<meta name="Copyright - Dolev Hodzaev Hacohen" Content="Optiwise 2008-2009 all rights reserved">
+<meta name="Author - Dolev Hodzaev Hacohen" Content="Optiwise LTD">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title> Accomplish Web </title>
+<link rel="shortcut icon" href="../photos/turqouise_icon.png" type="image/x-icon" />
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+  <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+
+
+
+<style language='text/css'>
+
+html
+{
+font-family: "Lato", "Helvetica", serif;
+font-weight: normal;
+}
+
+
+body
+{
+z-index:0;
+background:url('../photos/grey_background.png');
+background-size: 100% 151px;
+background-position:top center;
+background-repeat: no-repeat;
+}
+
+.draggable
+{
+z-index:7;
+color:white;
+background:#24D6AC;
+width: 1000px;
+height: 102px;
+padding: 8px;
+}
+
+
+.TaskSettings
+{
+position: relative;
+bottom:26px;
+left:8px;
+float:right;
+height:100%;
+width:60px;
+background:gray;
+opacity:0;
+}
+
+
+#ControlPanel
+{
+font-size:20px;
+text-align:center;
+z-index:6;
+opacity: 0.8;
+position:fixed;
+top:-20px;
+left:0px;
+width:300px;
+height:100%;
+background:#D9D9D9;
+}
+
+
+#DatePicker
+{
+width:101px;
+font-size:20px;
+background:none;
+border:none;
+}
+
+
+#DayTime
+{
+z-index:5;
+background:none;
+width:80%;
+position:relative;
+left:305px;
+color: #888888;
+font-size:20px;
+}
+
+
+.HoursTime 
+{
+margin-bottom:92px;
+}
+
+
+.hour
+{
+width:30px;
+position:relative;
+left:13px;
+}
+
+
+.border
+{
+position:relative;
+bottom:12px;
+left:75px;
+border: solid 1px #A3A3A3;
+width:95%;
+}
+
+
+.TaskContent
+{
+resize: none;
+position:relative;
+left: 35px;
+color:white;
+font-size:16px;
+background:none;
+border: none; 
+width:600px;
+height:55px;
+text-align:center;
+}
+
+
+.SecondTime
+{
+position:relative;
+}
+
+</style>
+</head>
+<body dir="ltr">
+<script type="text/javascript">
+   
+ jQuery(document).ready(function($) {
+
+
+window.setInterval(function(){
+  GetTime();
+}, 60000);
+window.onload = GetTime();
+window.onload = GetDate();
+  
+var date = new Date();
+var Minutes = date.getMinutes();
+var  Hours = date.getHours();
+var TimeFiller = Hours*118+Minutes/60*118+34;
+
+function GetTime()
+{
+
+ date = new Date();
+ Minutes = date.getMinutes();
+ Hours = date.getHours();
+ TimeFiller = Hours*118+Minutes/60*118+34;
+ $("body").css("background-size","100% "+TimeFiller+"px");
+}
+
+ function GetDate()
+ {
+date = new Date();
+var year = date.getFullYear();
+var month = date.getMonth()+1;
+var day = date.getDate();
+var FullDate = day+"."+month+"."+year;
+document.getElementById('ControlPanel').innerHTML = '<br> Today <br><br> <input type="text" id="DatePicker" value="'+FullDate+'">';
+}
+
+
+window.setInterval(function(){
+var elementOffset = $('#Task_1').offset().top;
+var RoundHours = parseInt((elementOffset-32)/118);
+var RoundMinutes = parseInt(((elementOffset-32)/118-RoundHours)*60);
+if (RoundMinutes<=9) document.getElementById('FirstTime-Task_1').innerHTML = RoundHours+":0"+RoundMinutes;
+else document.getElementById('FirstTime-Task_1').innerHTML = RoundHours+":"+RoundMinutes;
+}, 10);
+
+window.setInterval(function(){
+var elementOffset = $('#Task_1').offset().top;
+var RoundHours = parseInt((elementOffset-32)/118);
+var TaskHeight = parseInt(($("#Task_1").height()+16)/118+((elementOffset-32)/118-RoundHours));
+var RoundMinutes = parseInt(((elementOffset+$("#Task_1").height()+16-32)/118-RoundHours-TaskHeight)*60);
+var TaskHeightMin = parseInt((($("#Task_1").height()+16)/118-TaskHeight)*60);
+if (RoundMinutes<=9) document.getElementById('SecondTime-Task_1').innerHTML = RoundHours+TaskHeight+":0"+RoundMinutes;
+else document.getElementById('SecondTime-Task_1').innerHTML = RoundHours+TaskHeight+":"+RoundMinutes;
+}, 10);
+
+window.setInterval(function(){
+var TaskHeight = $("#Task_1").height();
+$(".TaskContent").css("top", TaskHeight/2-51+"px");
+$(".SecondTime").css("top", TaskHeight-102+"px");
+}, 10);
+
+   $(function() {
+    $(".draggable").draggable({
+	 containment: $('#DayTime'),
+	// revert: "valid"
+	 });
+	$(".draggable").resizable(
+	{
+		maxHeight: 2700,
+		minHeight: 29.5,
+		maxWidth: 1000,
+		minWidth: 1000
+	});
+	
+
+	});
+	
+
+	
+	
+$('#Task_1').hover(TaskSettingsHoverIn, TaskSettingsHoverOut);
+
+function TaskSettingsHoverIn() {
+    $('#Settings-Task_1').animate({opacity:  '+=0.2'}, 200);
+}
+function TaskSettingsHoverOut() {
+    $('#Settings-Task_1').animate({opacity: '-=0.2'}, 200);
+	}
+
+ 
+var ScrollFromTop=0;
+ 
+if(Hours !=1 && Hours !=2)
+	{
+		ScrollFromTop = Hours*119+Minutes/60*119-150; 
+	}
+
+ 
+ $('html, body').animate({
+    scrollTop: ScrollFromTop,
+    scrollLeft: 0
+}, 1000);
+
+
+  $( "#DatePicker" ).datepicker({
+      changeMonth: true,
+      changeYear: true,
+      showButtonPanel: true,
+	  dateFormat: 'dd.mm.yy'
+    });
+
+  
+  
+});
+	
+</script>
+
+<p id='ControlPanel'>
+Today-problem
+</p>
+
+<br><br>
+
+
+<div id='DayTime'>
+<p class='HoursTime'> <div class='hour'> 1:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 2:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 3:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 4:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 5:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 6:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 7:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 8:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 9:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 10:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 11:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 12:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 13:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 14:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 15:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 16:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 17:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 18:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 19:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 20:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 21:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 22:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 23:00 </div> <div class='border'></div>  </p>
+<p class='HoursTime'> <div class='hour'> 0:00 </div> <div class='border'></div>  </p>
+
+
+
+
+</div>
+
+
+<div class="draggable" id='Task_1' >
+<div id='FirstTime-Task_1'> Time-problem </div>
+<div class='TaskSettings' id='Settings-Task_1'> settings </div>
+<center> <textarea type='textbox' maxlength='160' class='TaskContent' id='Content-Task_1' placeholder=' Task title '></textarea> </center>
+<div id='SecondTime-Task_1' class='SecondTime'> Time-problem  </div>
+</div>
+
+<div class="draggable">
+<div> Time-problem  </div>
+<center> <textarea type='textbox' maxlength='160'class='TaskContent' placeholder=' Task title '></textarea> </center>
+<div> Time-problem  </div>
+</div>
+
+
+
+
+
+
+</body>
+</html>
